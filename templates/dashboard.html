@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CrowdIntel Dashboard</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            padding-top: 30px;
+            font-size: 2.5rem;
+        }
+
+        .video-container {
+            margin-top: 30px;
+        }
+
+        img {
+            width: 80%;
+            max-width: 900px;
+            border: 5px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .count {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+
+        .overcrowded {
+            color: #ff4d4d;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .logout-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to CrowdIntel, {{ username }}</h1>
+
+    <div class="video-container">
+        <img src="{{ url_for('video_feed') }}" alt="Live Video Feed">
+    </div>
+
+    <div class="count">
+        People Count: <span id="count">0</span>
+        <div id="warning" class="overcrowded">⚠️ Overcrowded!</div>
+    </div>
+
+    <form action="/logout">
+        <button class="logout-button" type="submit">Logout</button>
+    </form>
+
+    <!-- 🔊 Audio alert -->
+    <audio id="alert-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
+    <script>
+        let alertPlayed = false;
+
+        setInterval(() => {
+            fetch('/count')
+                .then(response => response.json())
+                .then(data => {
+                    const countSpan = document.getElementById('count');
+                    const warningDiv = document.getElementById('warning');
+                    const alertSound = document.getElementById('alert-sound');
+
+                    countSpan.textContent = data.count;
+
+                    if (data.count > 12) {
+                        warningDiv.style.display = 'block';
+
+                        if (!alertPlayed) {
+                            alertSound.play();
+                            alertPlayed = true;
+                        }
+                    } else {
+                        warningDiv.style.display = 'none';
+                        alertPlayed = false;
+                    }
+                });
+        }, 1000);
+    </script>
+</body>
+</html>
