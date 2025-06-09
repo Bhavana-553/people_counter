@@ -2,15 +2,9 @@
   "version": 2,
   "public": true,
   "builds": [
-    {
-      "src": "login.html",
-      "use": "@vercel/static"
-    }
+    { "src": "index.html", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/login.html"
-    }
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
