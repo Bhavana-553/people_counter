@@ -13,7 +13,7 @@ def index():
     return "✅ Flask is running. Go to /video_feed to see the people counter stream."
 
 def generate_frames():
-    cap = cv2.VideoCapture("mall_video.mp4")  # Use your video file path here
+    cap = cv2.VideoCapture(r"C:\Users\bhavh\OneDrive\Documents\people_counter\mall_video.mp4")  # Use your video file path here
 
     if not cap.isOpened():
         print("❌ Failed to open video file.")
