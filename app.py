@@ -21,7 +21,7 @@ model = YOLO('yolov8n.pt')
 def serve_index():
     return send_from_directory('people_counter', 'index.html')  # Serving frontend directly
 
-@app.route('/login', methods=['POST'])
+@app.route('/index', methods=['POST'])
 def login():
     username = request.form['username']
     password = request.form['password']
