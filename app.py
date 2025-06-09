@@ -2,7 +2,7 @@ from flask import Flask, Response
 import cv2
 from ultralytics import YOLO
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Load YOLO model
 model = YOLO("yolov8n.pt")  # Make sure this model file is accessible
