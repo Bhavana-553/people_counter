@@ -2,8 +2,10 @@ services:
   - type: web
     name: people-counter
     env: python
-    buildCommand: ""
+    buildCommand: pip install -r requirements.txt
     startCommand: python app.py
     envVars:
       - key: FLASK_ENV
         value: production
+      - key: PORT
+        value: 10000
