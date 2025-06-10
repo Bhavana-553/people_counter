@@ -1,11 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, session, jsonify, Response, send_from_directory
-import cv2
-from ultralytics import YOLO
 import time
+import cv2
+from flask import Flask, render_template, request, redirect, session, jsonify, Response, send_from_directory
+from flask_cors import CORS  # ✅ Import CORS
+from ultralytics import YOLO
 
 app = Flask(__name__)
-app.secret_key = 'secretkey'  # Use a secure key in production
+CORS(app)  # ✅ Enable CORS support
+
+app.secret_key = 'secretkey'  # ⚠️ Use a secure, random key in production
 
 # ✅ Dummy login credentials
 users = {"bhavana": "#bhav"}
@@ -14,12 +17,13 @@ users = {"bhavana": "#bhav"}
 people_count = 0
 tracked_ids = set()
 
-# ✅ Load YOLOv8 model (make sure yolov8n.pt is in the project folder or accessible path)
+# ✅ Load YOLOv8 model (ensure yolov8n.pt exists at this location)
 model = YOLO('yolov8n.pt')
 
 @app.route('/')
 def serve_index():
-    return send_from_directory('people_counter', 'index.html')  # Serving frontend directly
+    # Serves the login page from the frontend directory
+    return send_from_directory('people_counter', 'index.html')
 
 @app.route('/index', methods=['POST'])
 def login():
@@ -44,8 +48,8 @@ def count():
 def generate_frames():
     global people_count, tracked_ids
 
+    # ✅ Replace this with live feed or keep video path for testing
     cap = cv2.VideoCapture(r"C:\Users\bhavh\OneDrive\Documents\people_-counter\mall_video.mp4")
-
 
     if not cap.isOpened():
         print("❌ Failed to open video file.")
@@ -95,5 +99,5 @@ def logout():
     return redirect('/')
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get("PORT", 10000))  # Use PORT env variable for Render/Vercel
     app.run(host="0.0.0.0", port=port, threaded=True)
